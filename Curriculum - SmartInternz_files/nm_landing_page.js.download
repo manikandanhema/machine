@@ -1,0 +1,255 @@
+var cpage = 1;
+$(function () {
+    showDATab();
+    $("body").on("click", '.pagination li', function () {
+        cpage = $(this).attr('page');
+        // get_records(cpage);
+    });
+    $('#reqCallBack').on('submit', function (e) {
+        var validatons = 1;
+        $('.inptFld').each(function () {
+            var valuee = $(this).val();
+            if (valuee == '') {
+                $(this).css('border-color', 'red');
+                $(this).css('background-color', '#eb929278');
+                $(this).css('color', '#fff');
+                validatons = 0;
+            } else {
+                $(this).css('border-color', '');
+                $(this).css('background-color', '');
+                $(this).css('color', '');
+            }
+        })
+
+        if (validatons == 1) {
+
+            $.ajax({
+                url: base_url + 'Welcome_API/nm_request_callbacks',
+                data: new FormData(this),
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    var data = $.parseJSON(data);
+                    if (data.err == 1) {
+                        $('#msg_aleft').html('<div class="alert alert-success" style="font-size: 15px;">Thanks for Submitting, we will reach you very soon !!</div> ');
+                        $('#msg_aleft').fadeOut(10000);
+                        ressting_form();
+                    }
+                }
+            });
+        }
+    });
+});
+
+function ressting_form() {
+    $('.inptFld').each(function () {
+        $(this).css('border-color', '');
+        $(this).css('background-color', '');
+        $(this).css('color', '');
+        $(this).val('');
+    });
+}
+function showDATab() {
+    var search = $.trim($('#search').val());
+    $.ajax({
+        url: base_url + "Welcome_API/getDAExternships",
+        method: "POST",
+        data: { 'Role': 'records' },
+        success: function (data) {
+            data = $.parseJSON(data);
+            var html = '';
+            if (data.records != '') {
+                var n = 1;
+                html += '<div class="row">';
+                $.each(data.records, function (i) {
+                    var row = data.records[i];
+                    var company_id = 1;
+                    // console.log(row);
+                    html += '<div class="col-md-3 my-3">';
+                    html += '<div class="ex-11">';
+                    html += '<a href="' + base_url + 'saas-guided-project/1/' + row.redrt_url + '" target="_blank">';
+                    html += '<img style="width: 100%; border-radius: 5px; opacity: 0.8;" class="tech_card_img" src="' + row.backgroundImage + '" alt="tie-business">';
+                    html += '<div class="ex-111">';
+                    // html += '<img src="' + row.brandLogo + '" alt="ibm-logo-small">';
+                    html += '<h6>' + row.externshipTitle + '</h6>';
+                    html += '<p class="duration_days">';
+                    html += '<span style="width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/technology.png" alt="ai"> &nbsp;&nbsp;' + row.technologytag + '';
+                    html += '</span>';
+                    html += '<span style="float:right;width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/DomainResized.png" alt="domain">&nbsp; ' + row.domain_tag + '';
+                    html += '</span>';
+                    html += '</p>';
+                    html += '<button class="btn btn-primary know_more">Know More</button>';
+                    html += '</div>';
+                    html += '</a>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+            else {
+                html += "<tr><td colspan='3'>No records found ";
+            }
+
+            $('#show_DA_data').html(html);
+            $('#pills-home').show();
+            $('#pills-contact').show();
+            $('#pills-disabled').show();
+            $('#pills-profile').show();
+        }
+    });
+}
+function showSFTab() {
+    var search = $.trim($('#search').val());
+    $.ajax({
+        url: base_url + "Welcome_API/getSFExternships",
+        method: "POST",
+        data: { 'Role': 'records' },
+        success: function (data) {
+            data = $.parseJSON(data);
+            var html = '';
+            if (data.records != '') {
+                var n = 1;
+                html += '<div class="row">';
+                $.each(data.records, function (i) {
+                    var row = data.records[i];
+                    var company_id = 1;
+                    html += '<div class="col-md-3 my-3">';
+                    html += '<div class="ex-11">';
+                    html += '<a href="' + base_url + 'saas-guided-project/1/' + row.redrt_url + '" target="_blank">';
+                    html += '<img style="width: 100%; border-radius: 5px; opacity: 0.8;" class="tech_card_img" src="' + row.backgroundImage + '" alt="tie-business">';
+                    html += '<div class="ex-111">';
+                    // html += '<img src="' + row.brandLogo + '" alt="ibm-logo-small">';
+                    html += '<h6>' + row.externshipTitle + '</h6>';
+                    html += '<p class="duration_days">';
+                    html += '<span style="width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/technology.png" alt="ai"> &nbsp;&nbsp;' + row.technologytag + '';
+                    html += '</span>';
+                    html += '<span style="float:right;width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/DomainResized.png" alt="domain">&nbsp; ' + row.domain_tag + '';
+                    html += '</span>';
+                    html += '</p>';
+                    html += '<button class="btn btn-primary know_more">Know More</button>';
+                    html += '</div>';
+                    html += '</a>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+            else {
+                html += "<tr><td colspan='3'>No records found ";
+            }
+
+            $('#show_SF_data').html(html);
+            $('#pills-home').show();
+            $('#pills-contact').show();
+            $('#pills-disabled').show();
+            $('#pills-profile').show();
+        }
+    });
+}
+function showMLTab() {
+    var search = $.trim($('#search').val());
+    $.ajax({
+        url: base_url + "Welcome_API/getMLExternships",
+        method: "POST",
+        data: { 'Role': 'records' },
+        success: function (data) {
+            data = $.parseJSON(data);
+            var html = '';
+            if (data.records != '') {
+                var n = 1;
+                html += '<div class="row">';
+                $.each(data.records, function (i) {
+                    var row = data.records[i];
+                    var company_id = 1;
+                    html += '<div class="col-md-3 my-3">';
+                    html += '<div class="ex-11">';
+                    html += '<a href="' + base_url + 'saas-guided-project/1/' + row.redrt_url + '" target="_blank">';
+                    html += '<img style="width: 100%; border-radius: 5px; opacity: 0.8;" class="tech_card_img" src="' + row.backgroundImage + '" alt="tie-business">';
+                    html += '<div class="ex-111">';
+                    // html += '<img src="' + row.brandLogo + '" alt="ibm-logo-small">';
+                    html += '<h6>' + row.externshipTitle + '</h6>';
+                    html += '<p class="duration_days">';
+                    html += '<span style="width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/technology.png" alt="ai"> &nbsp;&nbsp;' + row.technologytag + '';
+                    html += '</span>';
+                    html += '<span style="float:right;width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/DomainResized.png" alt="domain">&nbsp; ' + row.domain_tag + '';
+                    html += '</span>';
+                    html += '</p>';
+                    html += '<button class="btn btn-primary know_more">Know More</button>';
+                    html += '</div>';
+                    html += '</a>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+            else {
+                html += "<tr><td colspan='3'>No records found ";
+            }
+
+            $('#show_ML_data').html(html);
+            $('#pills-home').hide();
+            $('#pills-disabled').hide();
+            $('#pills-profile').hide();
+            $('#pills-contact').show();
+
+        }
+    });
+}
+function showAndroidTab() {
+    var search = $.trim($('#search').val());
+    $.ajax({
+        url: base_url + "Welcome_API/getANDExternships",
+        method: "POST",
+        data: { 'Role': 'records' },
+        success: function (data) {
+            data = $.parseJSON(data);
+            var html = '';
+            if (data.records != '') {
+                var n = 1;
+                html += '<div class="row">';
+                $.each(data.records, function (i) {
+                    var row = data.records[i];
+                    var company_id = 1;
+                    html += '<div class="col-md-3 my-3">';
+                    html += '<div class="ex-11">';
+                    html += '<a href="' + base_url + 'saas-guided-project/1/' + row.redrt_url + '" target="_blank">';
+                    html += '<img style="width: 100%; border-radius: 5px; opacity: 0.8;" class="tech_card_img" src="' + row.backgroundImage + '" alt="tie-business">';
+                    html += '<div class="ex-111">';
+                    // html += '<img src="' + row.brandLogo + '" alt="ibm-logo-small">';
+                    html += '<h6>' + row.externshipTitle + '</h6>';
+                    html += '<p class="duration_days">';
+                    html += '<span style="width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/technology.png" alt="ai"> &nbsp;&nbsp;' + row.technologytag + '';
+                    html += '</span>';
+                    html += '<span style="float:right;width: 50%;display: inline-block;">';
+                    html += '<img src="https://careereducation.smartinternz.com/assets/saas/landingpage/images/DomainResized.png" alt="domain">&nbsp; ' + row.domain_tag + '';
+                    html += '</span>';
+                    html += '</p>';
+                    html += '<button class="btn btn-primary know_more">Know More</button>';
+                    html += '</div>';
+                    html += '</a>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+            else {
+                html += "<tr><td colspan='3'>No records found ";
+            }
+
+            $('#show_AND_data').html(html);
+            $('#pills-home').hide();
+            $('#pills-contact').hide();
+            $('#pills-disabled').show();
+            $('#pills-profile').hide();
+        }
+    });
+}
+
